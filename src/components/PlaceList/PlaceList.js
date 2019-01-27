@@ -10,8 +10,9 @@ const placeList = props => {
       data={props.places}
       renderItem={({ item }) => (
         <ListItem
-          placeName={item.value}
-          onItemPressed={() => props.onItemDeleted(item.key)}
+          placeName={item.name}
+          placeImage={item.image}
+          onItemPressed={() => props.onItemSelected(item.key)}
         />
       )}
       keyExtractor={item => item.key.toString()}
