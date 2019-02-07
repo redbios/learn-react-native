@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  ScrollView
+} from "react-native";
 import { connect } from "react-redux";
 import { deletePlace } from "../../store/actions/index";
 
@@ -13,7 +21,7 @@ class PlaceDetail extends Component {
 
   render() {
     return (
-      <View style={styles.modalContainer}>
+      <ScrollView style={styles.modalContainer}>
         <View>
           <Image
             source={this.props.placeDetail.image}
@@ -24,11 +32,15 @@ class PlaceDetail extends Component {
         <View>
           <TouchableOpacity onPress={this.itemDeleteHandler}>
             <View style={styles.deleteButton}>
-              <Icon size={30} name="ios-trash" color="red" />
+              <Icon
+                size={30}
+                name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
+                color="red"
+              />
             </View>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
