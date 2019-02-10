@@ -6,7 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from "react-native";
 import { connect } from "react-redux";
 import { deletePlace } from "../../store/actions/index";
@@ -14,6 +15,25 @@ import { deletePlace } from "../../store/actions/index";
 import Icon from "react-native-vector-icons/Ionicons";
 
 class PlaceDetail extends Component {
+  state = {
+    viewMode: Dimensions.get("window").height > 500 ? "portrait" : "landscape"
+  };
+
+  constructor(props) {
+    super(props);
+    Dimensions.addEventListener("change", this.updateViewMode);
+  }
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener("change", this.updateViewMode);
+  }
+
+  updateViewMode = dims => {
+    this.setState({
+      viewMode: dims.window.height > 500 ? "portrait" : "landscape"
+    });
+  };
+
   itemDeleteHandler = () => {
     this.props.onDeletePlace(this.props.placeDetail.key);
     this.props.navigator.pop();
@@ -22,10 +42,15 @@ class PlaceDetail extends Component {
   render() {
     return (
       <ScrollView style={styles.modalContainer}>
-        <View>
+        <View style={styles.imageWrapperLandscape}>
           <Image
             source={this.props.placeDetail.image}
-            style={styles.placeImage}
+            style={
+              this.state.viewMode === "portrait"
+                ? styles.placeImagePotrait
+                : styles.placeImageLandscape
+            }
+            resizeMode="cover"
           />
           <Text style={styles.placeName}>{this.props.placeDetail.name}</Text>
         </View>
@@ -49,8 +74,12 @@ const styles = StyleSheet.create({
   modalContainer: {
     margin: 22
   },
-  placeImage: {
+  placeImagePotrait: {
     width: "100%",
+    height: 200
+  },
+  placeImageLandscape: {
+    width: "70%",
     height: 200
   },
   placeName: {
@@ -59,6 +88,12 @@ const styles = StyleSheet.create({
     fontSize: 28
   },
   deleteButton: {
+    alignItems: "center"
+  },
+  imageWrapperPotrait: {
+    alignItems: "flex-start"
+  },
+  imageWrapperLandscape: {
     alignItems: "center"
   }
 });
