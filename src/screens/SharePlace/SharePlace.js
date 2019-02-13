@@ -16,7 +16,13 @@ class SharePlace extends Component {
   };
 
   state = {
-    placeName: ""
+    placeName: {
+      value: "",
+      valid: false,
+      validationRules: {
+        isFilled: true
+      }
+    }
   };
 
   constructor(props) {
@@ -35,14 +41,38 @@ class SharePlace extends Component {
   };
 
   placeNameChangeHandler = val => {
-    this.setState({
-      placeName: val
+    this.setState(prevState => {
+      return {
+        placeName: {
+          value: val,
+          valid: this.validationHandler(
+            val,
+            prevState.placeName.validationRules
+          ),
+          validationRules: prevState.placeName.validationRules
+        }
+      };
     });
   };
 
+  validationHandler = (val, rules) => {
+    let isValid = true;
+    for (const rul in rules) {
+      switch (rul) {
+        case "isFilled":
+          isValid = isValid && val !== "";
+          break;
+        default:
+          isValid = true;
+          break;
+      }
+    }
+    return isValid;
+  };
+
   placeAddedHandler = () => {
-    if (this.state.placeName.trim() !== "") {
-      this.props.onAddPlace(this.state.placeName);
+    if (this.state.placeName.value.trim() !== "") {
+      this.props.onAddPlace(this.state.placeName.value);
     }
   };
 
@@ -56,11 +86,15 @@ class SharePlace extends Component {
           <PickImage />
           <PickLocation />
           <PlaceInput
-            placeName={this.state.placeName}
+            placeName={this.state.placeName.value}
             onChangeText={this.placeNameChangeHandler}
           />
           <View style={styles.button}>
-            <Button title="Share the Place" onPress={this.placeAddedHandler} />
+            <Button
+              title="Share the Place"
+              onPress={this.placeAddedHandler}
+              disabled={!this.state.placeName.valid}
+            />
           </View>
         </View>
       </ScrollView>
