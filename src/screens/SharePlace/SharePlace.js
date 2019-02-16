@@ -22,6 +22,10 @@ class SharePlace extends Component {
       validationRules: {
         isFilled: true
       }
+    },
+    location: {
+      value: null,
+      valid: false
     }
   };
 
@@ -70,10 +74,20 @@ class SharePlace extends Component {
     return isValid;
   };
 
+  pickLocationHandler = location => {
+    this.setState({
+      location: {
+        value: location,
+        valid: true
+      }
+    });
+  };
+
   placeAddedHandler = () => {
-    if (this.state.placeName.value.trim() !== "") {
-      this.props.onAddPlace(this.state.placeName.value);
-    }
+    this.props.onAddPlace(
+      this.state.placeName.value,
+      this.state.location.value
+    );
   };
 
   render() {
@@ -84,7 +98,7 @@ class SharePlace extends Component {
             <HeadingText>Share The Place !</HeadingText>
           </MainText>
           <PickImage />
-          <PickLocation />
+          <PickLocation onPickLocation={this.pickLocationHandler} />
           <PlaceInput
             placeName={this.state.placeName.value}
             onChangeText={this.placeNameChangeHandler}
@@ -93,7 +107,9 @@ class SharePlace extends Component {
             <Button
               title="Share the Place"
               onPress={this.placeAddedHandler}
-              disabled={!this.state.placeName.valid}
+              disabled={
+                !this.state.placeName.valid || !this.state.location.valid
+              }
             />
           </View>
         </View>
@@ -115,7 +131,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddPlace: placeName => dispatch(addPlace(placeName))
+    onAddPlace: (placeName, location) => dispatch(addPlace(placeName, location))
   };
 };
 
