@@ -13,8 +13,7 @@ const reducer = (state = initialState, action) => {
           key: Math.random(),
           name: action.placeName,
           image: {
-            uri:
-              "https://assets3.thrillist.com/v1/image/2779417/size/tl-full_width_tall_mobile.jpg"
+            uri: action.image.uri
           },
           location: action.location
         })
