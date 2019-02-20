@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { View, Button, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Button,
+  StyleSheet,
+  ScrollView,
+  Text,
+  ActivityIndicator
+} from "react-native";
 import { connect } from "react-redux";
 
 import PlaceInput from "../../components/PlaceInput/PlaceInput";
@@ -105,6 +112,17 @@ class SharePlace extends Component {
   };
 
   render() {
+    let submitButton = (
+      <Button
+        title="Share the Place"
+        onPress={this.placeAddedHandler}
+        disabled={!this.state.placeName.valid || !this.state.location.valid}
+      />
+    );
+
+    if (this.props.isLoading) {
+      submitButton = <ActivityIndicator size="large" />;
+    }
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -117,15 +135,7 @@ class SharePlace extends Component {
             placeName={this.state.placeName.value}
             onChangeText={this.placeNameChangeHandler}
           />
-          <View style={styles.button}>
-            <Button
-              title="Share the Place"
-              onPress={this.placeAddedHandler}
-              disabled={
-                !this.state.placeName.valid || !this.state.location.valid
-              }
-            />
-          </View>
+          <View style={styles.button}>{submitButton}</View>
         </View>
       </ScrollView>
     );
@@ -143,6 +153,12 @@ const styles = StyleSheet.create({
   }
 });
 
+const mapStateToProps = state => {
+  return {
+    isLoading: state.ui.isLoading
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     onAddPlace: (placeName, location, image) =>
@@ -151,6 +167,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(SharePlace);
