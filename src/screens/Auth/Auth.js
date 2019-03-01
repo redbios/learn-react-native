@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import backgroundImage from "../../assets/background.jpg";
 
 import validate from "../../utility/Validation";
-import { tryAuth } from "../../store/actions/index";
+import { tryAuth, authAutoSignIn } from "../../store/actions/index";
 
 import Defaultinput from "../../components/UI/DefaultInput/DefaultInput";
 import HeadingText from "../../components/UI/HeadingText/HeadingText";
@@ -57,6 +57,10 @@ class AuthScreen extends Component {
 
   componentWillUnmount() {
     Dimensions.removeEventListener("change", this.updateStyle);
+  }
+
+  componentWillMount() {
+    this.props.autoSignIn();
   }
 
   switchAuthModeHandler = () => {
@@ -272,7 +276,8 @@ const mapStateToStore = state => {
 
 const mapDispatchToStore = dispatch => {
   return {
-    tryAuth: (authData, autohmode) => dispatch(tryAuth(authData, autohmode))
+    tryAuth: (authData, autohmode) => dispatch(tryAuth(authData, autohmode)),
+    autoSignIn: () => dispatch(authAutoSignIn())
   };
 };
 
