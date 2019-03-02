@@ -32,7 +32,13 @@ export const tryAuth = (authData, authmode) => {
         "Content-Type": "application/json"
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          return new Error();
+        }
+      })
       .then(parsedRes => {
         dispatch(uiStopLoading());
         if (parsedRes.error || !parsedRes.idToken) {
@@ -123,7 +129,13 @@ export const authGetToken = () => {
               }
             );
           })
-          .then(res => res.json())
+          .then(res => {
+            if (res.ok) {
+              return res.json();
+            } else {
+              return new Error();
+            }
+          })
           .then(parsedRes => {
             if (parsedRes.id_token) {
               dispatch(

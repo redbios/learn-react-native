@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     padding: 10,
     backgroundColor: "#dddddd",
-    color: "black",
+    color: "#0c0c0c",
     flexDirection: "row",
     alignItems: "center"
   },
